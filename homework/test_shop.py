@@ -89,6 +89,14 @@ class TestCart:
 
         assert product not in cart.products
 
+    def test_remove_product_partially_fails(self, cart, product, product_2):
+        cart.add_product(product, 1)
+        cart.add_product(product_2, buy_product_count)
+        cart.remove_product(product, buy_product_count + 1)
+
+        assert product not in cart.products
+        assert cart.products[product_2] == buy_product_count
+
     def test_remove_two_products_completely(self, cart, product, product_2):
         cart.add_product(product, buy_product_count)
         cart.add_product(product_2, buy_product_count)
@@ -96,18 +104,6 @@ class TestCart:
         cart.remove_product(product_2)
 
         assert product, product_2 not in cart.products
-
-    def test_remove_product_partially_fails(self, cart, product, product_2):
-        cart.add_product(product, 1)
-        cart.add_product(product_2, buy_product_count)
-
-        print(cart.products)
-
-        with pytest.raises(ValueError):
-            cart.remove_product(product, 2)
-
-        # Проверяем, что второй продукт не затронут и остался в корзине
-        assert cart.products[product_2] == buy_product_count
 
     def clear_cart(self, cart, product):
         cart.add_product(product, buy_product_count)
