@@ -32,7 +32,7 @@ class Product:
             Если продуктов не хватает, то выбросите исключение ValueError
         """
         if not self.check_quantity(quantity):
-            raise ValueError("Недостаточно товара на складе")
+            raise ValueError(f"Недостаточно товара {self.name} на складе")
         self.quantity -= quantity
 
     def __hash__(self):
@@ -70,6 +70,8 @@ class Cart:
         """
         if product not in self.products:
             return
+
+        # Если remove_count не указан или больше текущего количества - удалить полностью
         if remove_count is None or remove_count >= self.products[product]:
             del self.products[product]
         else:
