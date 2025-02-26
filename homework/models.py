@@ -83,18 +83,20 @@ class Cart:
     def get_total_price(self) -> float:
         return sum(product.price * quantity for product, quantity in self.products.items())
 
-
     def buy(self):
-
         """
         Метод покупки.
-        Учтите, что товаров может не хватать на складе.
-        В этом случае нужно выбросить исключение ValueError
+        Сначала проверяем, хватает ли всех товаров.
+        Если хотя бы одного не хватает — выбрасываем ValueError.
+        Если всё в наличии — списываем товары.
         """
-        for product, quantity in list(self.products.items()):
+        # Проверяем, хватает ли всех товаров на складе
+        for product, quantity in self.products.items():
             if not product.check_quantity(quantity):
                 raise ValueError(f'Недостаточно товара {product.name} на складе')
 
+        # Если проверки пройдены, списываем товары
+        for product, quantity in self.products.items():
             product.buy(quantity)
 
         self.clear()
