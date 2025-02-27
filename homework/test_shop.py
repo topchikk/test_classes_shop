@@ -139,6 +139,19 @@ class TestCart:
             cart.add_product(product, product.quantity + 1)
             cart.buy()
 
+    def test_buy_cart_failure_due_to_one_product_out_of_stock(self, cart, product, product_2):
+        cart.add_product(product, buy_product_count)
+        cart.add_product(product_2, product_2.quantity + 1)  # Добавляем больше, чем есть на складе
+
+        with pytest.raises(ValueError):
+            cart.buy()
+
+        # Проверяем, что количество товаров не изменилось, так как покупка не состоялась
+        assert product.quantity == product.quantity
+        assert product_2.quantity == product_2.quantity
+        assert cart.products[product] == buy_product_count
+        assert cart.products[product_2] == product_2.quantity + 1
+
     def test_buy_multiple_products(self, cart, product, product_2):
         initial_quantity_product = product.quantity
         initial_quantity_product_2 = product_2.quantity
